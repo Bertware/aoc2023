@@ -57,13 +57,13 @@ public class DayOneChallenge extends AocChallenge {
             return c;
         }
         for (Map.Entry<String, Character> spelledDigit : digits.entrySet()) {
-            String spelledValue = spelledDigit.getKey(); // The string value, "one"
+            String spelledValue = spelledDigit.getKey(); // The string charValue, "one"
             if (spelledValue.charAt(0) != c) { // Doesn't even start with the right character
                 continue;
             }
 
             int remainingLength = line.length() - i; // The remaining length in the line from the character index
-            boolean fitsSpelledDigit = remainingLength >= spelledValue.length(); // Whether the string value fits in the remaining length
+            boolean fitsSpelledDigit = remainingLength >= spelledValue.length(); // Whether the string charValue fits in the remaining length
             if (fitsSpelledDigit && line.substring(i, i + spelledValue.length()).equals(spelledValue)) {
                 return spelledDigit.getValue();
             }

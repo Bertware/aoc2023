@@ -4,7 +4,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 
-public class AocTest {
+public abstract class AocTest {
 
     public Path getFilePath(String filename) {
         try {

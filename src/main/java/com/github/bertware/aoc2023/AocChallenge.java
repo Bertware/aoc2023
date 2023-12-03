@@ -5,7 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
-public class AocChallenge {
+import com.github.bertware.aoc2023.data.AocMatrix;
+
+public abstract class AocChallenge {
 
     public Stream<String> readLines(Path path) {
         try {
@@ -15,4 +17,12 @@ public class AocChallenge {
         }
     }
 
+    public AocMatrix readMatrix(Path path) {
+        try {
+            char[][] array = Files.readAllLines(path).stream().map(String::toCharArray).toList().toArray(new char[][]{});
+            return new AocMatrix(array);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
