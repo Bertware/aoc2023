@@ -3,15 +3,15 @@ package com.github.bertware.aoc2023;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.stream.Stream;
 
 import com.github.bertware.aoc2023.data.AocMatrix;
 
 public abstract class AocChallenge {
-
-    public Stream<String> readLines(Path path) {
+    public List<String> readLines(Path path) {
         try {
-            return Files.readAllLines(path).stream();
+            return Files.readAllLines(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

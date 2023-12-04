@@ -1,4 +1,4 @@
-package com.github.bertware.aoc2023.day3.day2;
+package com.github.bertware.aoc2023.day3;
 
 import com.github.bertware.aoc2023.AocTest;
 import com.github.bertware.aoc2023.day2.DayTwoChallenge;

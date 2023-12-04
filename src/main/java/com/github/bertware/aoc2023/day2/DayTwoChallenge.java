@@ -8,7 +8,7 @@ public class DayTwoChallenge extends AocChallenge {
 
 
     public int runPart1(Path inputFilePath, int red, int green, int blue) {
-        return readLines(inputFilePath).mapToInt(line -> handleLinePartOne(line, red, green, blue)).sum();
+        return readLines(inputFilePath).stream().mapToInt(line -> handleLinePartOne(line, red, green, blue)).sum();
     }
 
     private int handleLinePartOne(String line, int red, int green, int blue) {
@@ -50,7 +50,7 @@ public class DayTwoChallenge extends AocChallenge {
 
 
     public int runPart2(Path inputFilePath) {
-        return readLines(inputFilePath).mapToInt(this::handleLinePartTwo).sum();
+        return readLines(inputFilePath).stream().mapToInt(this::handleLinePartTwo).sum();
     }
 
     public int handleLinePartTwo(String line) {
