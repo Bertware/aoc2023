@@ -1,4 +1,4 @@
-package com.github.bertware.aoc2023.day4
+package com.github.bertware.aoc2023.day5
 
 import com.github.bertware.aoc2023.AocChallenge
 import java.nio.file.Path
