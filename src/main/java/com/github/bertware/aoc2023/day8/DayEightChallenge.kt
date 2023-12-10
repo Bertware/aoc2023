@@ -4,10 +4,6 @@ import com.github.bertware.aoc2023.AocChallenge
 import java.nio.file.Path
 import java.util.stream.Collectors
 
-private const val HAND1_BETTER = 1
-private const val HAND2_BETTER = -1
-private const val HANDS_EQUAL = 0
-
 class DayEightChallenge : AocChallenge() {
 
     fun part1(path: Path): Int {
