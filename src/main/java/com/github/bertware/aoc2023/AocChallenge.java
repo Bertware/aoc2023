@@ -16,7 +16,13 @@ public abstract class AocChallenge {
             throw new RuntimeException(e);
         }
     }
-
+    public char[][] readArray(Path path) {
+        try {
+            return Files.readAllLines(path).stream().map(String::toCharArray).toList().toArray(new char[][]{});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public AocMatrix readMatrix(Path path) {
         try {
             char[][] array = Files.readAllLines(path).stream().map(String::toCharArray).toList().toArray(new char[][]{});
