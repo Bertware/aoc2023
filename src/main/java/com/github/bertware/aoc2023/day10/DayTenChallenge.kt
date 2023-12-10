@@ -10,14 +10,14 @@ class DayTenChallenge : AocChallenge() {
 
     fun part1(path: Path): Int {
         val grid = readArray(path)
-        var positions = getPipelinePositions(grid)
+        val positions = getPipelinePositions(grid)
         return (positions.size + 1) / 2
     }
 
     private fun getPipelinePositions(grid: Array<CharArray>): ArrayList<Coordinate> {
         val startPos = findStartPosition(grid)
 
-        var positions = ArrayList<Coordinate>()
+        val positions = ArrayList<Coordinate>()
         positions.add(startPos)
         positions.add(getNextPositionFromStart(grid, startPos))
 
@@ -31,67 +31,39 @@ class DayTenChallenge : AocChallenge() {
     private fun getNextPositionFromStart(grid: Array<CharArray>, startPos: Coordinate): Coordinate {
         if (startPos.hasUp()) {
             val up = startPos.up()
-            val upval = grid[up.row][up.col]
-            if (upval in listOf('|', 'F', '7'))
+            val charAbove = grid[up.row][up.col]
+            if (charAbove in listOf('|', 'F', '7'))
                 return up;
         }
         if (startPos.hasRight(grid)) {
             val right = startPos.right()
-            val rightval = grid[right.row][right.col]
-            if (rightval in listOf('-', 'J', '7'))
+            val charToRight = grid[right.row][right.col]
+            if (charToRight in listOf('-', 'J', '7'))
                 return right;
         }
-        return startPos.down() // The two connections are on down and left
+        return startPos.down() // The two connections are down and to the left
     }
 
     private fun getNextPosition(grid: Array<CharArray>, positions: List<Coordinate>): Coordinate {
         val lastPos = positions.last()
         val nextLastPos = positions[positions.size - 2]
         val value = grid[lastPos.row][lastPos.col]
-
-        if (value == '|') {
-            return getNextPosition(lastPos, nextLastPos, grid, listOf(Direction.UP, Direction.DOWN))
-        }
-        if (value == '-') {
-            return getNextPosition(lastPos, nextLastPos, grid, listOf(Direction.LEFT, Direction.RIGHT))
-        }
-        if (value == 'L') {
-            return getNextPosition(lastPos, nextLastPos, grid, listOf(Direction.UP, Direction.RIGHT))
-        }
-        if (value == 'J') {
-            return getNextPosition(lastPos, nextLastPos, grid, listOf(Direction.UP, Direction.LEFT))
-        }
-        if (value == 'F') {
-            return getNextPosition(lastPos, nextLastPos, grid, listOf(Direction.DOWN, Direction.RIGHT))
-        }
-        if (value == '7') {
-            return getNextPosition(lastPos, nextLastPos, grid, listOf(Direction.DOWN, Direction.LEFT))
-        }
-        throw IllegalArgumentException("No next position")
-    }
-
-    private fun getNextPosition(
-        lastPos: Coordinate,
-        nextLastPos: Coordinate,
-        grid: Array<CharArray>,
-        dirs: List<Direction>
-    ): Coordinate {
-        if (dirs.contains(Direction.UP) && lastPos.hasUp() && nextLastPos != lastPos.up())
-            return lastPos.up()
-        if (dirs.contains(Direction.DOWN) && lastPos.hasDown(grid) && nextLastPos != lastPos.down())
-            return lastPos.down()
-        if (dirs.contains(Direction.LEFT) && lastPos.hasLeft() && nextLastPos != lastPos.left())
-            return lastPos.left()
-        if (dirs.contains(Direction.RIGHT) && lastPos.hasRight(grid) && nextLastPos != lastPos.right())
-            return lastPos.right()
-        throw IllegalArgumentException("No next position")
+        return when (value) {
+            '|' -> listOf(lastPos.up(), lastPos.down())
+            '-' -> listOf(lastPos.left(), lastPos.right())
+            'L' -> listOf(lastPos.up(), lastPos.right())
+            'J' -> listOf(lastPos.up(), lastPos.left())
+            'F' -> listOf(lastPos.down(), lastPos.right())
+            '7' -> listOf(lastPos.down(), lastPos.left())
+            else -> throw IllegalArgumentException("No next position")
+        }.first { it != nextLastPos }
     }
 
     private fun findStartPosition(grid: Array<CharArray>): Coordinate {
-        for (r in 0..<grid.size) {
+        for (r in grid.indices) {
             val row = grid[r]
-            for (c in 0..<row.size)
-                if (row[c].equals('S'))
+            for (c in row.indices)
+                if (row[c] == 'S')
                     return Coordinate(r, c)
         }
         throw IllegalStateException("No staring position in grid")
@@ -105,13 +77,13 @@ class DayTenChallenge : AocChallenge() {
 
     fun part2(path: Path): Int {
         val grid = readArray(path)
-        var pipePositions = getPipelinePositions(grid)
+        val pipePositions = getPipelinePositions(grid)
         // now we have the entire grid, find the enclosed parts
         val corners = getCornerPoints(pipePositions)
         // now we have a polygon, so we can run point in polygon
         var enclosedPointCount = 0
-        for (i in 0..<grid.size)
-            for (j in 0..<grid[i].size)
+        for (i in grid.indices)
+            for (j in grid[i].indices)
                 enclosedPointCount += if (!pipePositions.contains(Coordinate(i, j)) && inPolygon(
                         Coordinate(i, j),
                         corners
@@ -124,12 +96,12 @@ class DayTenChallenge : AocChallenge() {
     private fun inPolygon(coordinate: Coordinate, corners: List<Coordinate>): Boolean {
         // Point in polygon algorithm, shoot rays down from each point and check the number of intersections
         var intersections = 0
-        for (i in 0..<corners.size) {
-            val c1 = corners.get(i)
-            val c2 = corners.get((i + 1) % corners.size)
+        for (i in corners.indices) {
+            val c1 = corners[i]
+            val c2 = corners[(i + 1) % corners.size]
             if (c1.col == c2.col) { // Vertical walls have no effect, skip them
-                val c0 = corners.get((i - 1 + corners.size) % corners.size)
-                val c3 = corners.get((i + 2) % corners.size)
+                val c0 = corners[(i - 1 + corners.size) % corners.size]
+                val c3 = corners[(i + 2) % corners.size]
                 // ] or [ vertical lines are ignored, but Z or S shapes should count
                 if ((c0.col < c1.col && c3.col < c1.col) || (c0.col > c1.col && c3.col > c1.col))
                     continue
@@ -173,15 +145,6 @@ class DayTenChallenge : AocChallenge() {
         return results;
     }
 
-
-    enum class Direction {
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN
-
-    }
-
     data class Coordinate(val row: Int, val col: Int) {
         fun hasUp(): Boolean {
             return row > 0
@@ -191,16 +154,8 @@ class DayTenChallenge : AocChallenge() {
             return Coordinate(row - 1, col)
         }
 
-        fun hasDown(grid: Array<CharArray>): Boolean {
-            return row < grid.size - 1
-        }
-
         fun down(): Coordinate {
             return Coordinate(row + 1, col)
-        }
-
-        fun hasLeft(): Boolean {
-            return col > 0
         }
 
         fun left(): Coordinate {
